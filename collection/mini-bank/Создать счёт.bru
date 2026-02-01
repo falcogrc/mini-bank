@@ -1,0 +1,27 @@
+meta {
+  name: Создать счёт
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/accounts
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "clientName": "Ivan Ivanov",
+    "initialBalance": 1000.00
+  }
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class BankAccountTest {
     @Test
@@ -15,7 +16,7 @@ public class BankAccountTest {
         BigDecimal balance = new BigDecimal("1000.00");
 
         // when
-        BankAccount account = new BankAccount(id, clientName, balance);
+        BankAccount account = new BankAccount(id, clientName, balance, LocalDateTime.now());
 
         // then
         assertThat(account.getId()).isEqualTo(id);
@@ -26,7 +27,7 @@ public class BankAccountTest {
     @Test
     void shouldIncreaseBalanceWhenDepositPositiveAmount() {
         // given
-        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("1000.00"));
+        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("1000.00"), LocalDateTime.now());
         BigDecimal depositAmount = new BigDecimal("500.00");
 
         // when
@@ -39,7 +40,7 @@ public class BankAccountTest {
     @Test
     void shouldDecreaseBalanceWhenWithdrawValidAmount() {
         // given
-        BankAccount account = new BankAccount(1L, "test", new BigDecimal("1000.00"));
+        BankAccount account = new BankAccount(1L, "test", new BigDecimal("1000.00"), LocalDateTime.now());
 
         // when
         account.withdraw(new BigDecimal("300.00"));
@@ -51,7 +52,7 @@ public class BankAccountTest {
     @Test
     void shouldThrowExceptionWhenWithdrawMoreThanBalance() {
         // given
-        BankAccount account = new BankAccount(1L, "test", new BigDecimal("100.00"));
+        BankAccount account = new BankAccount(1L, "test", new BigDecimal("100.00"), LocalDateTime.now());
 
         // when & then
         assertThatThrownBy(() -> account.withdraw(new BigDecimal("200.00")))
@@ -62,7 +63,7 @@ public class BankAccountTest {
 
     @Test
     void shouldThrowExceptionWhenDepositNullAmount() {
-        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("1000.00"));
+        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("1000.00"), LocalDateTime.now());
 
         assertThatThrownBy(() -> account.deposit(null))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -71,7 +72,7 @@ public class BankAccountTest {
 
     @Test
     void shouldThrowExceptionWhenDepositNegativeAmount() {
-        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("1000.00"));
+        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("1000.00"), LocalDateTime.now());
 
         assertThatThrownBy(() -> account.deposit(new BigDecimal("-100.00")))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -81,7 +82,7 @@ public class BankAccountTest {
     @Test
     void shouldThrowExceptionWhenWithdrawNullAmount() {
         // given
-        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("1000.00"));
+        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("1000.00"), LocalDateTime.now());
 
         // when & then
         assertThatThrownBy(() -> account.withdraw(null))
@@ -93,7 +94,7 @@ public class BankAccountTest {
     @Test
     void shouldThrowExceptionWhenWithdrawZeroAmount() {
         // given
-        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("10.00"));
+        BankAccount account = new BankAccount(1L, "Test", new BigDecimal("10.00"), LocalDateTime.now());
 
         // when & then
         assertThatThrownBy(() -> account.withdraw(new BigDecimal("0.00")))
