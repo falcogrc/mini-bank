@@ -14,3 +14,40 @@ settings {
   encodeUrl: false
   timeout: 0
 }
+
+example {
+  name: 200 OK
+  
+  request: {
+    url: http://localhost:8080/api/accounts/1
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Fri, 06 Feb 2026 13:04:47 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "id": 1,
+          "clientName": "Ivan Ivanov",
+          "balance": 1000,
+          "createdAt": null
+        }
+      '''
+    }
+  }
+}

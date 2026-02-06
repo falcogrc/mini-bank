@@ -25,3 +25,50 @@ settings {
   encodeUrl: false
   timeout: 0
 }
+
+example {
+  name: 201 Created
+  
+  request: {
+    url: http://localhost:8080/api/accounts
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:json: {
+      {
+        "clientName": "Ivan Ivanov",
+        "initialBalance": 1000.00
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Fri, 06 Feb 2026 13:04:44 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "id": 1,
+          "clientName": "Ivan Ivanov",
+          "balance": 1000,
+          "createdAt": "2026-02-06T16:04:44.249977673"
+        }
+      '''
+    }
+  }
+}

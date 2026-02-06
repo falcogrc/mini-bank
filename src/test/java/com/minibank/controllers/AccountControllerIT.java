@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -89,10 +89,10 @@ public class AccountControllerIT {
     @Test
     void shouldReturnNotFoundWhenAccountDoesNotExist() throws Exception {
         CreateAccountRequest request = new CreateAccountRequest();
-
-        mockMvc.perform(get("/api/accounts/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+        Long nonExistentId = 999L;
+        mockMvc.perform(get("/api/accounts/{id}", nonExistentId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isNotFound());
     }
 }

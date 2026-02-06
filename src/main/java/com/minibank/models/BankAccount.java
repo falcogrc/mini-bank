@@ -1,10 +1,12 @@
 package com.minibank.models;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
 public class BankAccount {
     @Setter
     private Long id;
@@ -28,22 +30,6 @@ public class BankAccount {
         this(null, clientName, balance, LocalDateTime.now());
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
 
     public void deposit(BigDecimal amount) {
         if (amount == null) {

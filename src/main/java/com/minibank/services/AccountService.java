@@ -2,6 +2,7 @@ package com.minibank.services;
 
 import com.minibank.dto.AccountResponse;
 import com.minibank.dto.CreateAccountRequest;
+import com.minibank.exeptions.AccountNotFoundException;
 import com.minibank.models.BankAccount;
 import com.minibank.repositories.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -36,13 +37,13 @@ public class AccountService {
 
     public AccountResponse getAccount(Long id) {
         BankAccount account = accountRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Account not found with id: " + id));
+            .orElseThrow(() -> new AccountNotFoundException(id));
 
         return new AccountResponse(
                 account.getId(),
                 account.getClientName(),
                 account.getBalance(),
-                null // createdAt пока не храню
+                account.getCreatedAt()
         );
     }
 }

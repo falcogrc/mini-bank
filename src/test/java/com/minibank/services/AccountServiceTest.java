@@ -12,8 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -53,13 +55,29 @@ public class AccountServiceTest {
 
     @Test
     void shouldGetAccountById() {
-        // TODO: напиши тест для метода getAccount
-        // Подсказка: используй when(...).thenReturn(...)
+        Long accountId = 1L;
+        BankAccount bankAccount = new BankAccount(
+                accountId,
+                "Test",
+                new BigDecimal("1000.00"),
+                LocalDateTime.now()
+        );
+
+        when(accountRepository.findById(accountId)).thenReturn(Optional.of(bankAccount));
+
+        AccountResponse response = accountService.getAccount(accountId);
+
+        assertThat(response).isNotEqualTo(null);
+        assertThat(response.getId()).isEqualTo(accountId);
+        assertThat(response.getClientName()).isEqualTo("Test");
     }
 
     @Test
     void shouldThrowExceptionWhenAccountNotFound() {
-        // TODO: напиши тест для случая, когда счет не найден
-        // Подсказка: используй assertThatThrownBy
+        Long nonExistentId = -1L;
+        when(accountRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> accountService.getAccount(nonExistentId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Account not found with id: " + nonExistentId);
     }
 }
