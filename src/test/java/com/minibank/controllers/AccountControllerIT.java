@@ -9,9 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
-import java.awt.*;
 import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,7 +78,7 @@ public class AccountControllerIT {
         System.out.println(createdAccount);
         Long createdAccountId = createdAccount.getId();
 
-        ResultActions perform = mockMvc.perform(get("/api/accounts/{id}", createdAccountId)
+        mockMvc.perform(get("/api/accounts/{id}", createdAccountId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(createdAccountId))
@@ -89,7 +87,12 @@ public class AccountControllerIT {
     }
 
     @Test
-    void shouldReturnNotFoundWhenAccountDoesNotExist() {
-        // TODO: доделать
+    void shouldReturnNotFoundWhenAccountDoesNotExist() throws Exception {
+        CreateAccountRequest request = new CreateAccountRequest();
+
+        mockMvc.perform(get("/api/accounts/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
     }
 }

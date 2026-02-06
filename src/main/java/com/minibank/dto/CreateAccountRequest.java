@@ -3,9 +3,13 @@ package com.minibank.dto;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@Setter
+@Getter
 public class CreateAccountRequest {
 
     @NotBlank(message = "Client name is required")
@@ -15,19 +19,4 @@ public class CreateAccountRequest {
     @DecimalMin(value = "0.0", inclusive = false, message = "Initial balance must be positive")
     private BigDecimal initialBalance;
 
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public BigDecimal getInitialBalance() {
-        return initialBalance;
-    }
-
-    public void setInitialBalance(BigDecimal initialBalance) {
-        this.initialBalance = initialBalance;
-    }
 }
