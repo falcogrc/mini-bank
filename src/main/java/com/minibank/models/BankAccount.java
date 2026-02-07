@@ -1,6 +1,5 @@
 package com.minibank.models;
 
-import com.minibank.exeptions.AccountNotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 
