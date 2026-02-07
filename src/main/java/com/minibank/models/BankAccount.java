@@ -1,5 +1,6 @@
 package com.minibank.models;
 
+import com.minibank.exeptions.AccountNotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +29,6 @@ public class BankAccount {
     public BankAccount(String clientName, BigDecimal balance) {
         this(null, clientName, balance, LocalDateTime.now());
     }
-
 
     public void deposit(BigDecimal amount) {
         if (amount == null) {

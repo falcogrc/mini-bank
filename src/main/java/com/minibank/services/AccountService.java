@@ -46,4 +46,9 @@ public class AccountService {
                 account.getCreatedAt()
         );
     }
+
+    public BankAccount getAccountEntity(Long id) {
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException(id));
+    }
 }
