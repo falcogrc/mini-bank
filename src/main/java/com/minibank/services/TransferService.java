@@ -3,6 +3,7 @@ package com.minibank.services;
 import com.minibank.models.BankAccount;
 import com.minibank.models.Transaction;
 import com.minibank.models.TransactionStatus;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Service
 public class TransferService {
     private final AtomicLong nextTransactionId = new AtomicLong(1L);
 
