@@ -90,9 +90,12 @@ public class AccountControllerIT {
     void shouldReturnNotFoundWhenAccountDoesNotExist() throws Exception {
         CreateAccountRequest request = new CreateAccountRequest();
         Long nonExistentId = 999L;
-        mockMvc.perform(get("/api/accounts/{id}", nonExistentId)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/accounts/{id}", nonExistentId))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Account not found"))
+                .andExpect(jsonPath("$.message").value("Account not found with id: " + nonExistentId));
     }
 }
