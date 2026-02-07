@@ -25,7 +25,6 @@ public class BankAccount {
         this.balance = balance;
         this.createdAt = createdAt;
     }
-
     public BankAccount(String clientName, BigDecimal balance) {
         this(null, clientName, balance, LocalDateTime.now());
     }

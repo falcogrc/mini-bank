@@ -2,6 +2,7 @@ package com.minibank.services;
 
 import com.minibank.dto.AccountResponse;
 import com.minibank.dto.CreateAccountRequest;
+import com.minibank.exeptions.AccountNotFoundException;
 import com.minibank.models.BankAccount;
 import com.minibank.repositories.AccountRepository;
 import org.junit.jupiter.api.Test;
@@ -74,10 +75,10 @@ public class AccountServiceTest {
 
     @Test
     void shouldThrowExceptionWhenAccountNotFound() {
-        Long nonExistentId = -1L;
+        Long nonExistentId = 999L;
         when(accountRepository.findById(nonExistentId)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> accountService.getAccount(nonExistentId))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(AccountNotFoundException.class)
                 .hasMessageContaining("Account not found with id: " + nonExistentId);
     }
 }
