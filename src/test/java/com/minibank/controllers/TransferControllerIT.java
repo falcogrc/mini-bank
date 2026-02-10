@@ -1,6 +1,8 @@
 package com.minibank.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.minibank.dto.AccountResponse;
+import com.minibank.dto.CreateAccountRequest;
 import com.minibank.dto.TransferRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -40,5 +43,62 @@ public class TransferControllerIT {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.error").value("Account not found"));
+    }
+
+
+    @Test
+    void shouldTransferMoneySuccessfully() throws Exception {
+        // arrange
+        AccountResponse sender = createAccount("Sender", "1000.00");
+        AccountResponse receiver = createAccount("Receiver", "10.00");
+
+        // act
+        BigDecimal transferAmount = new BigDecimal("500.00");
+        String comment = "test payment";
+
+        TransferRequest transferRequest = new TransferRequest();
+        transferRequest.setFromAccountId(sender.getId());
+        transferRequest.setToAccountId(receiver.getId());
+        transferRequest.setAmount(transferAmount);
+        transferRequest.setComment(comment);
+
+        // act & assert
+        mockMvc.perform(post("/api/transfers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(transferRequest)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.fromAccountId").value(sender.getId()))
+                .andExpect(jsonPath("$.toAccountId").value(receiver.getId()))
+                .andExpect(jsonPath("$.amount").value(500.00))
+                .andExpect(jsonPath("$.comment").value(comment));
+
+        // assert
+        verifyAccountBalance(sender.getId(), 500.00);
+        verifyAccountBalance(receiver.getId(), 510.00);
+    }
+
+    private AccountResponse createAccount(String clientName, String initialBalance) throws Exception {
+        CreateAccountRequest request = new CreateAccountRequest();
+        request.setClientName(clientName);
+        request.setInitialBalance(new BigDecimal(initialBalance));
+
+        String responseJson = mockMvc.perform(post("/api/accounts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        return objectMapper.readValue(responseJson, AccountResponse.class);
+    }
+
+    private void verifyAccountBalance(Long accountId, double expectedBalance) throws Exception {
+        mockMvc.perform(get("/api/accounts/{id}", accountId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(accountId))
+                .andExpect(jsonPath("$.balance").value(expectedBalance));
     }
 }
