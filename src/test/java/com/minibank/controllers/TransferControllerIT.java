@@ -89,6 +89,8 @@ public class TransferControllerIT {
         TransferRequest transferRequest = new TransferRequest();
         transferRequest.setFromAccountId(account.getId());
         transferRequest.setToAccountId(account.getId());
+        transferRequest.setAmount(transferAmount);
+        transferRequest.setComment(comment);
 
         mockMvc.perform(post("/api/transfers")
                 .contentType(MediaType.APPLICATION_JSON)
