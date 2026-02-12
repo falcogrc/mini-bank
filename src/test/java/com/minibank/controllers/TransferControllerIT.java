@@ -102,6 +102,30 @@ public class TransferControllerIT {
                 .andExpect(jsonPath("$.message").value("Cannot transfer to the same account"));
     }
 
+    @Test
+    void shouldReturnBadRequestWhenInsufficientFunds() throws Exception {
+        AccountResponse sender = createAccount("sender", "10.00");
+        AccountResponse receiver = createAccount("sender", "1000.00");
+
+        BigDecimal transferAmount = new BigDecimal("100.00");
+        String comment = "hack money";
+
+        TransferRequest transferRequest = new TransferRequest();
+        transferRequest.setFromAccountId(sender.getId());
+        transferRequest.setToAccountId(receiver.getId());
+        transferRequest.setAmount(transferAmount);
+        transferRequest.setComment(comment);
+
+        mockMvc.perform(post("/api/transfers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(transferRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error").value("Transfer failed"))
+                .andExpect(jsonPath("$.message").value("insufficient funds"));
+    }
+
     private AccountResponse createAccount(String clientName, String initialBalance) throws Exception {
         CreateAccountRequest request = new CreateAccountRequest();
         request.setClientName(clientName);
