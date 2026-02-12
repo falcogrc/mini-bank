@@ -79,6 +79,27 @@ public class TransferControllerIT {
         verifyAccountBalance(receiver.getId(), 510.00);
     }
 
+
+    @Test
+    void shouldReturnBadRequestWhenTransferSameAccount() throws Exception {
+        AccountResponse account = createAccount("Sender", "1000.00");
+        BigDecimal transferAmount = new BigDecimal("500.00");
+        String comment = "test bad 400 payment";
+
+        TransferRequest transferRequest = new TransferRequest();
+        transferRequest.setFromAccountId(account.getId());
+        transferRequest.setToAccountId(account.getId());
+
+        mockMvc.perform(post("/api/transfers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(transferRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error").value("Transfer failed"))
+                .andExpect(jsonPath("$.message").value("Cannot transfer to the same account"));
+    }
+
     private AccountResponse createAccount(String clientName, String initialBalance) throws Exception {
         CreateAccountRequest request = new CreateAccountRequest();
         request.setClientName(clientName);
