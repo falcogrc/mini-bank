@@ -30,8 +30,8 @@ public class TransferControllerIT {
     @Test
     void transferEndpointShouldWork() throws Exception {
         TransferRequest request = new TransferRequest();
-        request.setFromAccountId(1L);
-        request.setToAccountId(2L);
+        request.setFromAccountId(999L);
+        request.setToAccountId(888L);
         request.setAmount(new BigDecimal("100.00"));
         request.setComment("test transfer");
 
@@ -41,7 +41,7 @@ public class TransferControllerIT {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.status").value("FAILED"))
                 .andExpect(jsonPath("$.error").value("Account not found"));
     }
 
@@ -72,7 +72,8 @@ public class TransferControllerIT {
                 .andExpect(jsonPath("$.fromAccountId").value(sender.getId()))
                 .andExpect(jsonPath("$.toAccountId").value(receiver.getId()))
                 .andExpect(jsonPath("$.amount").value(500.00))
-                .andExpect(jsonPath("$.comment").value(comment));
+                .andExpect(jsonPath("$.comment").value(comment))
+                .andExpect(jsonPath("$.status").value("SUCCESS"));
 
         // assert
         verifyAccountBalance(sender.getId(), 500.00);
@@ -99,7 +100,8 @@ public class TransferControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.error").value("Transfer failed"))
-                .andExpect(jsonPath("$.message").value("Cannot transfer to the same account"));
+                .andExpect(jsonPath("$.message").value("Cannot transfer to the same account"))
+                .andExpect(jsonPath("$.status").value("FAILED"));
     }
 
     @Test
@@ -123,7 +125,8 @@ public class TransferControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.error").value("Transfer failed"))
-                .andExpect(jsonPath("$.message").value("insufficient funds"));
+                .andExpect(jsonPath("$.message").value("insufficient funds"))
+                .andExpect(jsonPath("$.status").value("FAILED"));
     }
 
     private AccountResponse createAccount(String clientName, String initialBalance) throws Exception {

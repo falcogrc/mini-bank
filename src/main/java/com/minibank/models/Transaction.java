@@ -17,7 +17,7 @@ public class Transaction {
     @Setter
     private BigDecimal amount;
 
-    private TransactionStatus status;
+    private final TransactionStatus status;
 
     @Setter
     private LocalDateTime timestamp;
@@ -25,11 +25,18 @@ public class Transaction {
     @Setter
     private String comment;
 
-    public Transaction(Long id, Long fromAccountId, Long toAccountId, BigDecimal amount, TransactionStatus status, LocalDateTime timestamp, String comment) {
+    public Transaction(Long id,
+                       Long fromAccountId,
+                       Long toAccountId,
+                       BigDecimal amount,
+                       TransactionStatus status,
+                       LocalDateTime timestamp,
+                       String comment) {
         this.id = id;
         this.fromAccountId = fromAccountId;
         this.toAccountId = toAccountId;
         this.amount = amount;
+        this.status = status;
         this.timestamp = timestamp;
         this.comment = comment;
     }

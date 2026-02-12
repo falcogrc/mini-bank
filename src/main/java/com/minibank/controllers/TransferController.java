@@ -4,6 +4,7 @@ import com.minibank.dto.TransferRequest;
 import com.minibank.exeptions.AccountNotFoundException;
 import com.minibank.models.BankAccount;
 import com.minibank.models.Transaction;
+import com.minibank.models.TransactionStatus;
 import com.minibank.repositories.TransactionRepository;
 import com.minibank.services.AccountService;
 import com.minibank.services.TransferService;
@@ -53,7 +54,7 @@ public class TransferController {
                     "error", "Account not found",
                     "message", e.getMessage(),
                     "timestamp", LocalDateTime.now(),
-                    "status", 404
+                    "status", TransactionStatus.FAILED
             );
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         } catch (IllegalArgumentException e) {
@@ -61,7 +62,7 @@ public class TransferController {
                     "error", "Transfer failed",
                     "message", e.getMessage(),
                     "timestamp", LocalDateTime.now(),
-                    "status", 400
+                    "status", TransactionStatus.FAILED
             );
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
