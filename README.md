@@ -6,10 +6,10 @@
 Не просто "еще один учебный проект", а площадка для отработки hard skills в автотестировании бэкенда.
 
 ## Технический стек
-- **Java 17** + **Spring Boot 3.2.0** - современный стек
-- **JUnit 5** + **AssertJ** + **Mockito** - стандарт для enterprise
-- **Gradle** (Kotlin DSL) - промышленная сборка
-- **Spring Boot Test** - интеграционное тестирование
+- **Java 17** + **Spring Boot 3.2.0**
+- **JUnit 5** + **AssertJ** + **Mockito**
+- **Gradle** (Kotlin DSL)
+- **Spring Boot Test**
 
 ## Что реализовано
 
